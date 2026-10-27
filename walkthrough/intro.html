@@ -1,0 +1,89 @@
+<!doctype html>
+<!-- Intro card for the walkthrough: shard morph "1/3 → 2/3 → 3/3" with motion smear and an RGB fringe,
+     then a navy wipe and a masked line reveal. Frame-exact: render with window.__seek(t). -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:#fff}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const W = 1920, H = 1080, cv = document.getElementById('c'), g = cv.getContext('2d');
+const NAVY = '#00124d', CYAN = '#06e4f9', SANS = '"Helvetica Neue", Helvetica, Arial, sans-serif', MONO = 'Menlo, monospace';
+const DUR = 5.4;
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const eIn = (x) => x * x * x, eOut = (x) => 1 - Math.pow(1 - x, 3), eIO = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+// one glyph string -> black, orange and blue copies, cut into shards
+function makeWord(str, seed) {
+  const font = `800 400px ${SANS}`; g.font = font;
+  const w = Math.ceil(g.measureText(str).width) + 40, h = 440;
+  const tint = (col) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d');
+    x.font = font; x.textBaseline = 'middle'; x.fillStyle = col; x.fillText(str, 20, h / 2 + 10); return c; };
+  const r = rng(seed), shards = [], rows = 9, rh = h / rows;
+  for (let i = 0; i < rows; i++) {
+    const cuts = [0]; let n = 2 + Math.floor(r() * 3); for (let k = 0; k < n; k++) cuts.push(r() * w); cuts.push(w); cuts.sort((a, b) => a - b);
+    for (let k = 0; k < cuts.length - 1; k++) {
+      if (cuts[k + 1] - cuts[k] < 8) continue;
+      const a = (r() < .5 ? 0 : Math.PI) + (r() - .5) * 1.1;          // mostly sideways, like the reference
+      shards.push({ sx: cuts[k], sy: i * rh, sw: cuts[k + 1] - cuts[k], sh: rh + 1, dx: Math.cos(a), dy: Math.sin(a) * .6,
+        dist: 260 + r() * 520, rot: (r() - .5) * .9, delay: r() * .22 });
+    }
+  }
+  return { w, h, k: tint('#000'), o: tint('#ff7a1a'), b: tint('#1f6bff'), shards };
+}
+const WORDS = [makeWord('1/3', 11), makeWord('2/3', 23), makeWord('3/3', 37)];
+const LABELS = ['Live globe', 'Wallet screen', 'Lead flow'];
+// [in start, out start] per word; morphs overlap so one number breaks while the next one forms
+const SLOTS = [[0.05, 0.95], [1.15, 1.95], [2.15, 99]];
+const MOVE = .5;
+
+// shard offset as a fraction 0 (home) .. 1 (fully away) at time t
+function away(word, i, s, t) {
+  const [tin, tout] = SLOTS[i];
+  if (t < tout) { const p = clamp((t - tin - s.delay) / MOVE); return t < tin + s.delay ? null : 1 - eOut(p); }
+  const p = clamp((t - tout - s.delay) / MOVE); return p >= 1 ? null : eIn(p);
+}
+function drawWord(i, t) {
+  const wd = WORDS[i], ox = W / 2 - wd.w / 2, oy = 470 - wd.h / 2;
+  if (wd.shards.every((s) => away(wd, i, s, t) === 0)) { g.drawImage(wd.k, ox, oy); return; }   // at rest: no seams
+  g.save(); g.globalCompositeOperation = 'multiply';
+  for (const s of wd.shards) {
+    const f = away(wd, i, s, t); if (f === null) continue;
+    const f0 = away(wd, i, s, t - 1 / 30) ?? f;                       // one frame back, for the smear length
+    const pos = (q) => ({ x: ox + s.sx + s.dx * s.dist * q, y: oy + s.sy + s.dy * s.dist * q, r: s.rot * q });
+    const blit = (img, q, alpha, shift) => { const p = pos(q); g.globalAlpha = alpha; g.save();
+      g.translate(p.x + s.sw / 2 + s.dx * shift, p.y + s.sh / 2 + s.dy * shift); g.rotate(p.r);
+      g.drawImage(img, s.sx, s.sy, s.sw, s.sh, -s.sw / 2, -s.sh / 2, s.sw, s.sh); g.restore(); };
+    const v = (f - f0) * s.dist;                                      // pixels moved this frame
+    if (Math.abs(v) < .5) { blit(wd.k, f, 1, 0); continue; }
+    const fr = Math.min(Math.abs(v) * .35, 26) * Math.sign(v);        // RGB fringe grows with speed
+    blit(wd.o, f, .85, -fr); blit(wd.b, f, .85, fr);
+    const N = 7; for (let k = 0; k < N; k++) blit(wd.k, f0 + (f - f0) * (k + 1) / N, .32, 0);
+  }
+  g.restore();
+}
+// a line of text that slides up into its own clip box (in) and up out of it (out)
+function maskLine(txt, font, color, x, y, h, tin, tout, align) {
+  const pin = eOut(clamp((t_ - tin) / .55)), pout = eIn(clamp((t_ - tout) / .4));
+  if (pin <= 0 || pout >= 1) return;
+  g.save(); g.beginPath(); g.rect(0, y - h, W, h * 1.28); g.clip();
+  g.font = font; g.fillStyle = color; g.textAlign = align || 'left'; g.textBaseline = 'alphabetic';
+  g.fillText(txt, x, y + h * 1.1 * (1 - pin) - h * 1.2 * pout); g.restore();
+}
+let t_ = 0;
+window.__seek = (t) => {
+  t_ = t; g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+  if (t < 3.6) {
+    for (let i = 0; i < 3; i++) drawWord(i, t);
+    g.font = `500 22px ${MONO}`; g.fillStyle = '#6b7280'; g.textAlign = 'center';
+    g.globalAlpha = clamp(t / .4) * (1 - clamp((t - 2.75) / .3)); g.fillText('THREE PARTS', W / 2, 205); g.globalAlpha = 1;
+    LABELS.forEach((l, i) => maskLine(l, `600 64px ${SANS}`, '#000', W / 2, 800, 64, SLOTS[i][0] + .15, i < 2 ? SLOTS[i][1] : 2.8, 'center'));
+  }
+  // navy wipe from the top, then the title lines reveal one after another
+  const wp = eIO(clamp((t - 2.85) / .55));
+  if (wp > 0) { g.fillStyle = NAVY; g.fillRect(0, 0, W, H * wp); }
+  maskLine("A concept for TRM's", `700 104px ${SANS}`, '#fff', 260, 470, 104, 3.25, 99);
+  maskLine('crypto demo page.', `700 104px ${SANS}`, CYAN, 260, 600, 104, 3.4, 99);
+  maskLine('BY ELBERT BALLO  ·  NOT A TRM PAGE  ·  DEMO DATA IS MADE UP', `500 24px ${MONO}`, '#9fb4d9', 264, 700, 26, 3.7, 99);
+};
+window.__dur = DUR; window.__seek(0);
+</script></body></html>
