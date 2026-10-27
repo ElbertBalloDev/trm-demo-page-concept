@@ -1,0 +1,264 @@
+<template>
+  <style>
+    @font-face{font-family:"Funnel Sans";src:url("assets/fonts/funnel-sans.woff2") format("woff2");font-weight:300 800}
+    #walk{position:absolute;inset:0;--ink:#071c2c;--muted:#596f82;--line:#dfe3eb;--line-2:#c1c9d6;--alt:#f4f6fb;--blue:#0063e4;--blue-soft:#e7eaf4;--cyan:#06e4f9;--red:#d1193e;--yellow:#c77700;--phos:#0f8a5f;
+      --sans:"Funnel Sans","Helvetica Neue",Arial,sans-serif;--mono:"Space Mono",ui-monospace,monospace;--shadow:0 30px 70px rgba(0,0,0,.4);
+      background:#00124d;font-family:var(--sans);color:#fff;overflow:hidden}
+    #walk *{box-sizing:border-box}
+    #walk-bg{position:absolute;inset:0;background:radial-gradient(1200px 700px at 75% 40%,#0a2a7a 0%,#00124d 60%)}
+    #walk-head{position:absolute;left:96px;top:96px;width:400px}
+    #walk-eyebrow{font:700 18px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin:0 0 14px}
+    #walk-title{font:600 46px/1.1 var(--sans);letter-spacing:-.025em;margin:0}
+    #walk-cards{position:absolute;left:96px;top:420px;width:400px;display:flex;flex-direction:column;gap:14px}
+    #walk .wcard{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink)}
+    #walk .wcard.on{border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,99,228,.35)}
+    #walk .wc-chain{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;color:#fff}
+    #walk .wc-chain svg{width:22px;height:22px}
+    #walk .c-eth{background:#3c4fe0}#walk .c-btc{background:#f08c1a}#walk .c-tron{background:#d61f3a}
+    #walk .wc-body{display:flex;flex-direction:column}
+    #walk .wc-addr{font:400 19px var(--mono)}
+    #walk .wc-lab{font-size:15px;color:var(--muted)}
+    #walk .wc-pill{font:700 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:6px 8px;border-radius:5px}
+    #walk .p-none{background:var(--alt);color:var(--muted)}#walk .p-high{background:#ffe1e7;color:var(--red)}
+    #walk-note{position:absolute;left:96px;bottom:70px;font:400 15px var(--mono);color:#8fa3c8}
+    #walk-panel{position:absolute;left:560px;top:64px;width:1150px;transform-origin:0 0;transform:scale(1.0)}
+    #walk *{transition:none!important}
+    #walk .inv-log .lt{color:#86a2bc}
+    #walk .p-high{color:#a80f2d!important}
+    #walk-cursor{position:absolute;left:0;top:0;width:34px;height:40px;z-index:20;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+    #walk-ripple{position:absolute;left:0;top:0;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;border:3px solid var(--cyan);z-index:19;opacity:0}
+    #walk-ring{position:absolute;z-index:18;pointer-events:none;overflow:visible}
+    #walk-ring path{fill:none;stroke:#f2c230;stroke-width:4;stroke-linecap:round}
+    #walk-callout{position:absolute;z-index:18;font:600 26px var(--sans);color:#ffd85a;white-space:nowrap;background:#04101a;border:1px solid #f2c230;border-radius:8px;padding:8px 14px}
+    #walk .inv-toast{top:58px;bottom:auto;font-size:18px;padding:12px 18px}
+    #walk-end{position:absolute;inset:0;z-index:30;background:#00124d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0}
+    #walk-end-t{font:600 64px/1.1 var(--sans);letter-spacing:-.025em;text-align:center}
+    #walk-end-t span{color:var(--cyan)}
+    #walk-end-s{font:400 20px var(--mono);color:#a9bccf;text-align:center}
+    .walk-sq #walk-cards,.walk-sq #walk-note{display:none}
+    .walk-sq #walk-head{left:60px;top:46px;width:960px}
+    .walk-sq #walk-title{font-size:44px}
+    .walk-sq #walk-panel{left:60px;top:200px;width:1150px;transform:scale(.835)}
+    .walk-sq #walk-end-t{font-size:52px}
+/* ---------- investigation panel (v3) ---------- */
+.inv-layout{display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+.wcards{display:flex;flex-direction:column;gap:10px}
+.wcard{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;font:inherit;color:var(--ink);transition:border-color .2s,box-shadow .2s,transform .2s}
+.wcard:hover{border-color:var(--line-2);transform:translateY(-1px)}
+.wcard[aria-pressed="true"]{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,99,228,.15)}
+.wc-chain{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:#fff}
+.wc-chain svg{width:18px;height:18px}
+.c-eth{background:#3c4fe0}.c-btc{background:#f08c1a}.c-tron{background:#d61f3a}
+.wc-body{display:flex;flex-direction:column;min-width:0}
+.wc-addr{font:400 14.5px var(--mono)}
+.wc-lab{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wc-pill{font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:4px;white-space:nowrap}
+.p-none{background:var(--alt);color:var(--muted)}.p-high{background:#ffe1e7;color:var(--red)}.p-med{background:#fff1d6;color:#8a5200}.p-low{background:#e3f7ef;color:var(--phos)}
+.inv-stage{position:relative;min-width:0}
+.inv-preview{position:relative;border-radius:14px;overflow:hidden;background:#04101a;box-shadow:var(--shadow);aspect-ratio:16/9}
+.inv-preview video{width:100%;height:100%;object-fit:cover;display:block}
+.pv-run{position:absolute;right:16px;bottom:16px}
+.pv-tag{position:absolute;left:16px;top:14px;font:400 11px var(--mono);color:#a9bccf;background:rgba(4,16,26,.7);padding:4px 8px;border-radius:4px}
+
+.inv{background:#04101a;color:#d6e2ee;border-radius:14px;box-shadow:0 30px 70px rgba(7,28,44,.28);border:1px solid #13283a;overflow:hidden;position:relative}
+.inv-bar{display:flex;align-items:center;gap:12px;background:#071c2c;border-bottom:1px solid #13283a;padding:11px 16px;font:400 12px var(--mono);color:#a9bccf}
+.inv-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.inv-clock{margin-left:auto;color:var(--cyan);font-variant-numeric:tabular-nums}
+.inv-grid{display:grid;grid-template-columns:200px 1fr;grid-template-areas:'graph graph' 'gauge log';border-bottom:1px solid #13283a}
+.inv-graph-wrap{grid-area:graph}
+.inv-side{display:contents!important}
+.inv-gauge{grid-area:gauge;padding:14px 16px;border-top:1px solid #13283a;border-right:1px solid #13283a}
+.inv-log{grid-area:log;margin:14px 16px}
+.inv-graph-wrap{position:relative;padding:14px 14px 8px}
+.inv-graph{width:100%;height:auto;display:block;overflow:visible}
+.lane rect{fill:rgba(255,255,255,.025);stroke:rgba(255,255,255,.05)}
+.lane-bridge rect{fill:rgba(242,163,58,.05);stroke:rgba(242,163,58,.14);stroke-dasharray:4 4}
+.lane text{font:700 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;fill:#6f859b}
+.edge path{fill:none;stroke-width:2}
+.e-norm .e-base{stroke:#2f86ff}.e-bridge .e-base{stroke:#f2a33a;stroke-dasharray:6 5}.e-high .e-base{stroke:#ff3d5e}
+.e-flow{stroke:#fff;stroke-width:2.2!important;stroke-dasharray:3 22;opacity:0}
+.e-done .e-flow{opacity:.55;animation:flow 1.2s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-25}}
+.e-lab{font:400 11px var(--mono);fill:#a9bccf;paint-order:stroke;stroke:#04101a;stroke-width:3px}
+.node{cursor:pointer;outline:none}
+.node .n-dot{fill:#0b2238;stroke:#2f86ff;stroke-width:2}
+.node .n-halo{fill:none;stroke:transparent;stroke-width:2}
+.node .n-ico{color:#cfe0f5}
+.node.r-med .n-dot{stroke:#f2a33a}.node.r-high .n-dot{stroke:#ff3d5e;fill:#2a0f1c}.node.r-high .n-ico{color:#ff9db0}.node.r-med .n-ico{color:#ffc879}
+.node.n-root .n-dot{stroke:var(--cyan);fill:#06303b}.node.n-root .n-ico{color:var(--cyan)}
+.node.n-live.r-high .n-halo{stroke:rgba(255,61,94,.35);animation:halo 1.8s ease-out infinite}
+@keyframes halo{0%{stroke-opacity:.6;r:20}100%{stroke-opacity:0;r:30}}
+.node:hover .n-dot,.node:focus-visible .n-dot,.node.pinned .n-dot{stroke-width:3.2}
+.node:focus-visible .n-halo{stroke:var(--cyan)}
+.n-lab{font:500 12.5px var(--sans);fill:#e8eef8}
+.n-sub{font:400 10.5px var(--mono);fill:#8fa3b8}
+.node.dim,.edge.dim{opacity:.22!important}
+.inv-tip{position:absolute;z-index:3;width:180px;background:#0b2238;border:1px solid #23415f;border-radius:8px;padding:10px 12px;font:400 11px/1.5 var(--mono);color:#cfe0f5;box-shadow:0 12px 30px rgba(0,0,0,.4);display:flex;flex-direction:column;pointer-events:none}
+.inv-tip b{font:600 12.5px var(--sans);color:#fff}
+.inv-tip em{font-style:normal;font-weight:700}
+.tr-high{color:#ff7d93}.tr-med{color:#ffc879}.tr-low{color:#7cb6ff}
+.inv-tip .muted{color:#6f859b;margin-top:4px}
+
+.inv-gauge{position:relative}
+.inv-gauge svg{width:100%;height:auto;display:block}
+.g-track{fill:none;stroke:#13283a;stroke-width:9;stroke-linecap:round}
+.g-fill{fill:none;stroke-width:9;stroke-linecap:round;stroke:#2f86ff}
+.g-fill.g-med{stroke:#f2a33a}.g-fill.g-high{stroke:#ff3d5e}.g-fill.g-low{stroke:#26d39a}
+.g-num{position:absolute;left:0;right:0;bottom:2px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.g-num b{font:600 30px/1 var(--sans);color:#fff;font-variant-numeric:tabular-nums}
+.g-num span{font:400 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#8fa3b8;margin-top:3px}
+.inv-log{min-height:132px;background:#020a12;border:1px solid #13283a;border-radius:8px;padding:8px 10px;font:400 10.5px/1.6 var(--mono);color:#a9e7f2;overflow:hidden}
+.inv-log .ln{white-space:pre-wrap;word-break:break-word}
+.inv-log .lt{color:#4d6a85;margin-right:8px}
+.caret{display:inline-block;width:6px;height:11px;background:var(--cyan);vertical-align:-1px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.inv-findings{list-style:none;margin:0;padding:12px 14px;display:grid;gap:8px;border-bottom:1px solid #13283a}
+.fcard{display:grid;grid-template-columns:auto 1fr 120px;gap:12px;align-items:center;background:#071c2c;border:1px solid #13283a;border-radius:8px;padding:10px 12px;transition:opacity .2s}
+.fcard.f-off{opacity:.45!important}
+.chip{font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:4px}
+.chip-direct{background:rgba(47,134,255,.2);color:#9cc4ff}.chip-indirect{background:rgba(242,163,58,.18);color:#ffc879}
+.f-body p{margin:0;font-size:13.5px;color:#e8eef8}
+.f-body .f-meta{font:400 10.5px var(--mono);color:#8fa3b8;margin-top:2px}
+.f-nc{display:none;margin-left:8px;color:#ffc879}
+.f-off .f-nc{display:inline}
+.f-conf{display:flex;flex-direction:column;gap:4px;font:400 10px var(--mono);color:#8fa3b8}
+.f-conf i{display:block;height:5px;background:#13283a;border-radius:3px;overflow:hidden}
+.f-conf b{display:block;height:100%;background:var(--cyan)}
+.inv-results{display:grid;grid-template-columns:auto 1.2fr 1.2fr auto;gap:18px;align-items:center;padding:12px 16px;opacity:0}
+.r-k{display:block;font:700 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#6f859b;margin-bottom:4px}
+.r-score b{font:600 26px/1 var(--sans);color:#fff;margin-right:6px}
+.r-band{font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:3px 6px;border-radius:4px;vertical-align:4px}
+.rb-high{background:rgba(255,61,94,.2);color:#ff7d93}.rb-med{background:rgba(242,163,58,.2);color:#ffc879}.rb-low{background:rgba(38,211,154,.18);color:#5fe3b6}
+.r-stack{display:flex;height:8px;border-radius:4px;overflow:hidden;background:#13283a}
+.r-stack i:first-child{background:#2f86ff}.r-stack i:last-child{background:#f2a33a}
+.r-stack i{transition:width .5s}
+.r-leg,.r-meta span:last-child{font:400 10.5px var(--mono);color:#a9bccf;display:block;margin-top:4px}
+.r-actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.ib{background:transparent;border:1px solid #2a4663;color:#d6e2ee;border-radius:6px;padding:8px 10px;font:700 10.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.ib:hover{border-color:var(--cyan);color:#fff}
+.ib[data-act="escalate"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.inv-rules{border-top:1px solid #13283a;padding:0 16px}
+.inv-rules summary{cursor:pointer;padding:12px 0;font:700 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
+.inv-rules .muted{color:#6f859b;font-weight:400;text-transform:none;letter-spacing:0}
+.rules-row{display:flex;flex-wrap:wrap;gap:12px 22px;padding:0 0 14px;font-size:13px;color:#d6e2ee}
+.tog{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.tog input{position:absolute;opacity:0;width:1px;height:1px}
+.tog span{width:32px;height:18px;border-radius:9px;background:#23415f;position:relative;transition:background .2s;flex:none}
+.tog span::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s}
+.tog input:checked+span{background:var(--blue)}
+.tog input:checked+span::after{transform:translateX(14px)}
+.tog input:focus-visible+span{outline:2px solid var(--cyan);outline-offset:2px}
+.sel select{background:#071c2c;color:#fff;border:1px solid #2a4663;border-radius:6px;padding:4px 8px;margin-left:6px;font:400 13px var(--mono)}
+.inv-toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:#0b2238;border:1px solid var(--cyan);color:#fff;font:400 12px var(--mono);padding:8px 14px;border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:4}
+
+
+
+.inv,.inv-stage,.inv-grid>*,.inv-layout>*{min-width:0}
+.inv-graph{max-width:100%}
+
+
+
+.ui-dots{display:flex;gap:5px}.ui-dots i{width:8px;height:8px;border-radius:50%;background:#2e4256}
+.inv-graph{max-width:100%}
+.caret,.e-done .e-flow,.node.n-live.r-high .n-halo{animation:none!important}
+.e-done .e-flow{opacity:.55}
+
+  </style>
+  <div id="walk" data-composition-id="walk" data-width="1920" data-height="1080">
+    <div id="walk-bg"></div>
+    <div id="walk-head" class="clip" data-start="0" data-duration="14">
+      <p id="walk-eyebrow">Wallet screen · concept walkthrough</p>
+      <h1 id="walk-title">Screen a wallet. Watch it cross a chain.</h1>
+    </div>
+    <div id="walk-cards" class="clip" data-start="0" data-duration="14"></div>
+    <p id="walk-note" class="clip" data-start="0" data-duration="14">Illustrative, made-up data · not TRM output</p>
+    <div id="walk-panel" class="clip" data-start="0" data-duration="14"><div class="inv" id="walk-inv"></div></div>
+    <svg id="walk-ring" class="clip" data-start="0" data-duration="14" width="10" height="10"><path id="walk-ring-p" d=""/></svg>
+    <div id="walk-callout" class="clip" data-start="0" data-duration="14"></div>
+    <div id="walk-ripple" class="clip" data-start="0" data-duration="14"></div>
+    <svg id="walk-cursor" class="clip" data-start="0" data-duration="14" viewBox="0 0 34 40"><path d="M3 2l26 20-12 2 7 13-5 2-7-13-9 8z" fill="#fff" stroke="#071c2c" stroke-width="2" stroke-linejoin="round"/></svg>
+    <div id="walk-end" class="clip" data-start="0" data-duration="14" data-layout-allow-overlap data-layout-allow-occlusion>
+      <div id="walk-end-t">Every finding.<br><span>Linked to its source.</span></div>
+      <div id="walk-end-s">Concept by Elbert Ballo · not a TRM page · made-up data</div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const W = 14;
+      const root = document.getElementById('walk');
+      const sq = false;  // landscape cut (film-square sets true)
+      if (sq) root.classList.add('walk-sq');
+      const IW = window.InvWidget;
+      const panel = document.getElementById('walk-inv');
+      const w = IW.create(panel, { film: true });
+      const S = IW.SAMPLES[0];
+      w.build({ ...S });
+      // wallet cards
+      const cards = document.getElementById('walk-cards');
+      cards.innerHTML = IW.SAMPLES.map((s, i) => `<div class="wcard" id="walk-card-${i}"><span class="wc-chain c-${s.chain.toLowerCase()}">${IW.svgIcon(s.chain, IW.CHAIN_ICON)}</span><span class="wc-body"><span class="wc-addr">${s.addr}</span><span class="wc-lab">${s.label}</span></span><span class="wc-pill p-none" id="walk-pill-${i}">not run</span></div>`).join('');
+      const $ = (s) => root.querySelector(s);
+      const details = $('[data-r="rules"]'), tog = $('[data-rule="indirect"]'), toast = $('[data-r="toast"]');
+      const flows = [...root.querySelectorAll('.e-flow')];
+      // measure once
+      const base = root.getBoundingClientRect();
+      const ctr = (el) => { const r = el.getBoundingClientRect(); return { x: r.left - base.left + r.width / 2, y: r.top - base.top + r.height / 2, r }; };
+      details.open = true; const P_tog = ctr(tog.parentElement.querySelector('span')); const P_sum = ctr(details.querySelector('summary'));
+      const P_esc = ctr($('[data-act="escalate"]')); const P_score = ctr($('.inv-gauge'));
+      details.open = false; const P_sum0 = ctr(details.querySelector('summary'));
+      const P_card = sq ? ctr($('.inv-bar')) : ctr($('#walk-card-0'));
+      const start = { x: sq ? 900 : 1500, y: sq ? 980 : 980 };
+      // cursor path: [time, x, y]
+      const K = [[0, start.x, start.y], [0.6, start.x, start.y], [1.25, P_card.x + 30, P_card.y + 8], [6.4, P_card.x + 30, P_card.y + 8], [7.0, P_sum0.x - 60, P_sum0.y], [7.5, P_tog.x, P_tog.y], [9.1, P_tog.x, P_tog.y], [9.75, P_esc.x, P_esc.y], [14, P_esc.x, P_esc.y]];
+      const CLICKS = [1.35, 7.05, 7.9, 9.85];
+      const easeIO = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+      function cursorAt(t) { for (let i = 1; i < K.length; i++) if (t <= K[i][0]) { const [t0, x0, y0] = K[i - 1], [t1, x1, y1] = K[i]; const p = easeIO(clamp((t - t0) / (t1 - t0 || 1))); return [x0 + (x1 - x0) * p, y0 + (y1 - y0) * p]; } const L = K[K.length - 1]; return [L[1], L[2]]; }
+      const WT0 = 1.45, SPEED = 0.75;
+      const wt = (t) => (t - WT0) * SPEED;
+      const cur = $('#walk-cursor'), rip = $('#walk-ripple'), ring = $('#walk-ring'), ringP = $('#walk-ring-p'), call = $('#walk-callout'), end = $('#walk-end');
+      // score ring around the gauge
+      const rx = P_score.r.width / 2 + 18, ry = P_score.r.height / 2 + 14;
+      ring.setAttribute('width', rx * 2 + 20); ring.setAttribute('height', ry * 2 + 20);
+      ring.style.left = (P_score.x - rx - 10) + 'px'; ring.style.top = (P_score.y - ry - 10) + 'px';
+      ringP.setAttribute('d', `M ${rx + 10 + rx * 0.9} ${ry + 10 - ry * 0.5} A ${rx} ${ry} 0 1 1 ${rx + 10 + rx * 0.98} ${ry + 10 + ry * 0.15}`);
+      const RL = 2 * Math.PI * Math.max(rx, ry); ringP.style.strokeDasharray = RL;
+      call.style.left = (P_score.r.left - base.left + 8) + 'px'; call.style.top = (P_score.r.top - base.top - 62) + 'px';
+      function renderAt(t) {
+        // widget state at film time t
+        const rulesOff = t >= 7.9;
+        if (rulesOff) w.setRules({ indirect: false }, wt(7.9), w.score().score === 81 ? 81 : 81); else w.setRules({}, -1, 0);
+        w.paintAt(Math.max(0, wt(t)));
+        details.open = t >= 7.05;
+        tog.checked = !rulesOff;
+        flows.forEach((f) => { f.style.strokeDashoffset = (-t * 22).toFixed(1); });
+        toast.hidden = !(t >= 9.85 && t < 11.5);
+        toast.textContent = 'Demo: no action taken (escalate to investigator)';
+        $('#walk-card-0').classList.toggle('on', t >= 1.35);
+        const pill = $('#walk-pill-0'); const done = wt(t) >= IW.DUR;
+        pill.className = 'wc-pill ' + (done ? 'p-high' : 'p-none'); pill.textContent = done ? 'High' : t >= 1.35 ? 'running' : 'not run';
+        // cursor + click ripple
+        const [cx, cy] = cursorAt(t);
+        cur.style.transform = `translate(${cx - 4}px, ${cy - 3}px)`;
+        let rp = 0; for (const c of CLICKS) if (t >= c && t < c + 0.45) rp = (t - c) / 0.45;
+        rip.style.opacity = rp ? (1 - rp).toFixed(3) : 0;
+        rip.style.transform = `translate(${cx}px, ${cy}px) scale(${0.4 + rp * 1.1})`;
+        // score callout 4.9–6.6, and again after the rule change
+        const ringOn = (t >= 4.9 && t < 6.6) || (t >= 8.2 && t < 10.7);
+        const rs = t >= 8.2 ? 8.2 : 4.9;
+        ringP.style.strokeDashoffset = ringOn ? (RL * (1 - easeIO(clamp((t - rs) / 0.5)))).toFixed(1) : RL;
+        call.style.opacity = ringOn ? clamp((t - rs - 0.3) / 0.3).toFixed(2) : 0;
+        call.textContent = t >= 8.2 ? 'Rule off: indirect exposure not counted' : 'Risk score: 81, high';
+        // end card
+        end.style.opacity = clamp((t - 11.5) / 0.3).toFixed(3);
+      }
+      const proxy = { t: 0 };
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(proxy, { t: 0 }, { t: W, duration: W, ease: 'none', onUpdate: () => renderAt(proxy.t) }, 0);
+      tl.fromTo('#walk-head', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.05);
+      tl.fromTo('#walk-panel', { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0.15);
+      tl.fromTo('#walk-cards', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 0.2);
+      renderAt(0);
+      window.__timelines['walk'] = tl;
+    })();
+  </script>
+</template>

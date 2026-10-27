@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+screenshots/
+_archive/
+walkthrough/audio/*.wav
+walkthrough/lofi.wav
+film/renders/
+film-square/renders/
+.hyperframes/

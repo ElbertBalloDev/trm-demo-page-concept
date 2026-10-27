@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Crypto Compliance Demo · Concept</title>
+<meta name="description" content="Concept redesign of TRM Labs' crypto-business demo page by Elbert Ballo. Not a TRM page; demo data is made up.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="concept" role="note"><span class="concept-dot" aria-hidden="true"></span><b>Concept redesign by Elbert Ballo</b> · not a TRM page · demo data is made up</div>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <nav class="nav" aria-label="Concept page">
+      <a class="logo" href="#top"><img src="assets/img/trm-labs.svg" alt="TRM Labs"><span class="logo-tag">Concept</span></a>
+      <div class="nav-links">
+        <a href="#tryit">Sample screen</a>
+        <a href="#platform">Platform</a>
+        <a href="#proof">Customers</a>
+        <a class="btn btn-outline-light" href="#demo">Request a demo</a>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow eyebrow-light">Blockchain intelligence for crypto compliance</p>
+        <h1 id="hero-h1" data-variant="a"></h1>
+        <p class="sub">Screen wallets for the highest-priority risks, catch indirect exposure when funds cross chains, and back every block or freeze decision with source details and confidence levels.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#tryit" id="cta-hero">Run a sample screen</a>
+          <a class="btn btn-outline-light" href="#demo">Request a demo</a>
+        </div>
+      </div>
+
+      <div class="globe-wrap">
+        <div class="gmode" id="globe-mode" role="group" aria-label="What the globe shows">
+          <button type="button" data-mode="compliance" aria-pressed="true">Compliance <span>prevent</span></button>
+          <button type="button" data-mode="investigate" aria-pressed="false">Investigations <span>trace</span></button>
+        </div>
+        <div class="hero-globe" id="hero-globe" role="img" aria-label="3D globe showing an illustrative wallet trace across cities: wallet, hop, bridge, TRON hop, flagged entity. Drag to spin.">
+          <span class="globe-hint" aria-hidden="true">Drag to spin</span>
+        </div>
+        <div class="globe-card" id="globe-card" aria-live="polite">
+          <div class="gc-head">
+            <div><p class="ui-label">Wallet screen</p><p class="ui-addr" data-g="addr">0x7a3f…e91c</p></div>
+            <div class="sev"><span>Severity</span><b data-g="sev" class="sev-high">High</b></div>
+          </div>
+          <ul class="ui-rows" data-g="rows">
+            <li><span class="tag tag-direct">Direct</span><span>Mixer (sanctioned)</span><span class="conf">High</span></li>
+            <li><span class="tag tag-indirect">Indirect</span><span>Bridged ETH → TRON, 2 hops</span><span class="conf">High</span></li>
+            <li><span class="tag tag-indirect">Indirect</span><span>Entity on a sanctions list</span><span class="conf">Medium</span></li>
+          </ul>
+          <p class="gc-foot"><span class="lgi"><i class="lg lg-blue"></i>path</span><span class="lgi"><i class="lg lg-amber"></i>bridge</span><span class="lgi"><i class="lg lg-red"></i>flagged</span><span class="lgi">· illustrative · made-up data</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="trusted">
+  <div class="wrap">
+    <p class="eyebrow trusted-h">Trusted by teams at</p>
+    <ul class="logos" aria-label="Customers as listed on TRM's crypto-business demo page">
+      <li><img src="assets/logos/circle.svg" alt="Circle" height="28" loading="lazy"></li>
+      <li><img src="assets/logos/falconx.svg" alt="FalconX" height="28" loading="lazy"></li>
+      <li><img src="assets/logos/uniswap.svg" alt="Uniswap" height="28" loading="lazy"></li>
+      <li><img src="assets/logos/binance.svg" alt="Binance" height="28" loading="lazy"></li>
+      <li><img src="assets/logos/sardine.svg" alt="Sardine" height="28" loading="lazy"></li>
+      <li><img src="assets/logos/anchorage-digital.svg" alt="Anchorage Digital" height="28" loading="lazy"></li>
+      <li><img src="assets/logos/avalabs.svg" alt="Ava Labs" height="28" loading="lazy"></li>
+    </ul>
+    <p class="trusted-cap">Customers as listed on trmlabs.com/crypto-business/demo</p>
+  </div>
+</div>
+
+<main>
+<section id="tryit" class="sec" aria-labelledby="tryit-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Try it</p>
+      <h2 id="tryit-h">Screen a wallet. Watch it cross a chain.</h2>
+      <p class="lede">Pick a sample wallet. The screen follows funds across chains, scores the risk with rules you can tune, and shows the source and confidence behind every finding.</p>
+    </div>
+    <div class="inv-layout">
+      <div class="inv-pick">
+        <div class="wcards" role="group" aria-label="Sample wallets" data-wcards></div>
+        <p class="disclaim">Illustrative, made-up data. Not real wallets, entities or TRM output.</p>
+      </div>
+      <div class="inv-stage">
+        <div class="inv-preview" data-preview>
+          <video data-pv muted loop playsinline preload="metadata" poster="assets/video/widget-walkthrough-poster.jpg" aria-label="Silent walkthrough of a wallet screen (made-up data)">
+            <source src="assets/video/widget-walkthrough.mp4" type="video/mp4">
+          </video>
+          <button class="btn btn-primary pv-run" type="button" data-pv-run>Run it live</button>
+          <span class="pv-tag">Walkthrough · made-up data</span>
+        </div>
+        <div class="inv" id="inv" data-inv hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="platform" class="sec sec-alt" aria-labelledby="sol-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">What it does</p>
+      <h2 id="sol-h">Three jobs. One view of risk.</h2>
+    </div>
+    <div class="grid3">
+      <div class="card"><span class="card-ico" aria-hidden="true">01</span><h3>Accelerate AML compliance</h3><ul><li>Screen for the highest-priority risks first</li><li>Detect indirect exposure across chains and assets</li><li>Tune alerts to cut false positives</li></ul></div>
+      <div class="card"><span class="card-ico" aria-hidden="true">02</span><h3>Act on the whole picture</h3><ul><li>Spot blockchain-specific behavioral anomalies</li><li>File more actionable SARs with detailed threat descriptions</li><li>Investigate risk even when funds cross chains</li></ul></div>
+      <div class="card"><span class="card-ico" aria-hidden="true">03</span><h3>Stay ahead of change</h3><ul><li>Expert guidance and advisory support</li><li>Sanctions coverage on <b>184+ blockchains</b></li><li>Insights from regulators and law enforcement</li></ul></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><p class="num">150+</p><h3>Configurable risk scoring</h3><p>Risk indicators you tune to your firm's risk appetite, scored in real time.</p></div>
+      <div class="stat"><p class="num">Cross-chain</p><h3>Visibility through bridges</h3><p>Trace through cross-chain bridges and detect indirect exposure.</p></div>
+      <div class="stat"><p class="num">1.9B</p><h3>Assets covered</h3><p>Expand into new assets with compliance peace of mind.</p></div>
+      <div class="stat"><p class="num">Source</p><h3>Reliable threat intelligence</h3><p>Source details and confidence levels behind blocking and freezing decisions.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="proof" class="sec" aria-labelledby="proof-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">From TRM's public case studies</p>
+      <h2 id="proof-h">Teams that built compliance in, not on.</h2>
+    </div>
+    <div class="proof">
+      <figure class="quote">
+        <p class="quote-co">Roxom <span>· TRM MCP, Transaction Monitoring</span></p>
+        <p class="quote-stat">A seven-agent AML investigation swarm, built in a week</p>
+        <blockquote>"More AI agents than people," with a person deciding every outcome.</blockquote>
+        <figcaption>Roxom, Bitcoin capital markets · <a href="https://www.trmlabs.com/files/case-study-how-roxom-is-pioneering-agentic-compliance" rel="noopener">Read the case study</a></figcaption>
+      </figure>
+      <figure class="quote">
+        <p class="quote-co">HIFI <span>· Transaction Monitoring, Compliance API</span></p>
+        <p class="quote-stat">Two weeks to support a new blockchain, on average</p>
+        <blockquote>"One of the key inputs underpinning our entire transaction monitoring operation."</blockquote>
+        <figcaption>Arya Demehri, compliance lead, HIFI · <a href="https://www.trmlabs.com/files/case-study-how-hifi-built-compliance-into-stablecoin-infrastructure-from-day-zero" rel="noopener">Read the case study</a></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-dark stats-band" id="customers-say" aria-labelledby="say-h">
+  <div class="wrap">
+    <h2 id="say-h" class="say-h">What our customers say<sup>*</sup></h2>
+    <div class="say-row">
+      <figure class="say"><p class="say-num" data-count="91">91%</p><figcaption>of users agree that they feel like they're working with experts at TRM who know how to help them</figcaption></figure>
+      <figure class="say"><p class="say-num" data-count="85">85%</p><figcaption>of users agree that TRM accelerates their work</figcaption></figure>
+      <figure class="say"><p class="say-num" data-count="83">83%</p><figcaption>of users agree that TRM goes the extra mile to ensure their success</figcaption></figure>
+    </div>
+    <p class="say-note">*TRM user survey, as stated on trmlabs.com; methodology not published on that page. "Our" here quotes TRM's page; this concept is not TRM.</p>
+  </div>
+</section>
+
+<section class="sec experts" aria-labelledby="exp-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Team as listed on trmlabs.com</p>
+      <h2 id="exp-h">Built by industry experts</h2>
+    </div>
+    <div class="exp-row">
+      <div class="exp"><span class="mono-av" aria-hidden="true">AR</span><h3><a href="https://www.trmlabs.com/crypto-business/demo" rel="noopener">Ari Redbord</a></h3><p class="exp-title">Global Head of Policy</p><p class="exp-prior">Former Senior US Treasury Official, Office of Terrorism and Financial Intelligence and National Security Prosecutor</p></div>
+      <div class="exp"><span class="mono-av" aria-hidden="true">TA</span><h3><a href="https://www.trmlabs.com/crypto-business/demo" rel="noopener">Tom Armstrong</a></h3><p class="exp-title">Head of Compliance</p><p class="exp-prior">Former Head of Financial Crime Compliance at Goldman Sachs</p></div>
+      <div class="exp"><span class="mono-av" aria-hidden="true">MP</span><h3><a href="https://www.trmlabs.com/crypto-business/demo" rel="noopener">Michael Pavlick</a></h3><p class="exp-title">Deployment Strategist</p><p class="exp-prior">Former Director of Digital Asset Financial Crime and Sanctions, KPMG</p></div>
+    </div>
+    <p class="exp-cap">Team as listed on trmlabs.com/crypto-business/demo. Monograms instead of photos: this is an unofficial concept page.</p>
+  </div>
+</section>
+
+<section id="demo" class="sec sec-dark" aria-labelledby="demo-h">
+  <div class="wrap form-wrap">
+    <div>
+      <p class="eyebrow eyebrow-light">Request a demo</p>
+      <h2 id="demo-h">See it on your own risk.</h2>
+      <p class="lede">Six fields. We fill in the rest after you submit, so you don't have to.</p>
+      <ul class="why">
+        <li><b>Work email first.</b> Your company domain tells us your team, region and size.</li>
+        <li><b>One question about your need.</b> It sends you to the right specialist.</li>
+        <li id="mode-li"><b>Demo mode.</b> Nothing on this concept page is sent anywhere. Open <b>Under the hood</b> to see what a real submit would create.</li>
+      </ul>
+    </div>
+    <form id="lead" novalidate>
+      <div class="field"><label for="f-email">Work email</label><input type="email" id="f-email" name="email" autocomplete="email" required aria-describedby="h-email"><p class="hint" id="h-email"></p></div>
+      <div class="row2">
+        <div class="field"><label for="f-first">First name</label><input type="text" id="f-first" name="firstname" autocomplete="given-name" required></div>
+        <div class="field"><label for="f-last">Last name</label><input type="text" id="f-last" name="lastname" autocomplete="family-name" required></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="f-company">Company</label><input type="text" id="f-company" name="company" autocomplete="organization" required></div>
+        <div class="field"><label for="f-role">Job title</label><input type="text" id="f-role" name="jobtitle" autocomplete="organization-title" required></div>
+      </div>
+      <div class="field"><label for="f-need">What do you need most?</label>
+        <select id="f-need" name="need" required>
+          <option value="">Choose one</option>
+          <option>Transaction monitoring</option>
+          <option>Wallet screening</option>
+          <option>Sanctions compliance</option>
+          <option>Investigations</option>
+          <option>Entity due diligence</option>
+          <option>Just exploring</option>
+          <option value="victim">I lost funds to a scam or theft</option>
+        </select></div>
+      <div class="field"><label for="f-msg">Anything else? <span class="opt">(optional)</span></label><textarea id="f-msg" name="message"></textarea></div>
+      <input type="hidden" name="utm_source" id="utm_source"><input type="hidden" name="utm_medium" id="utm_medium"><input type="hidden" name="utm_campaign" id="utm_campaign"><input type="hidden" name="utm_content" id="utm_content"><input type="hidden" name="utm_term" id="utm_term">
+      <input type="hidden" name="sfdcCampaignId" id="sfdcCampaignId" value="701XXXXXXXXDEMO01">
+      <div class="field check"><input type="checkbox" id="f-consent" name="consent" required><label for="f-consent">I agree to be contacted about this request. I can opt out of marketing emails at any time. <span id="consent-mode">(Demo: saved only in this browser.)</span></label></div>
+      <p class="hint err" id="form-err" role="alert"></p>
+      <button class="btn btn-primary btn-block" type="submit">Request a demo</button>
+      <p class="formnote" id="formnote">Concept page · demo mode · no data leaves your browser</p>
+      <div id="result" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="concept concept-foot" role="note"><span class="concept-dot" aria-hidden="true"></span><b>Concept redesign by Elbert Ballo</b> · not a TRM page · demo data is made up</div>
+    <div class="foot-grid">
+      <div>
+        <p class="foot-h">Sources</p>
+        <p>Claims about TRM come from TRM's public pages, quoted as they appear there:</p>
+        <ul>
+          <li><a href="https://www.trmlabs.com/crypto-business/demo" rel="noopener">trmlabs.com/crypto-business/demo</a>: solutions, 184+ blockchains, 1.9 billion assets, 150+ risk indicators, survey results, customer names</li>
+          <li><a href="https://www.trmlabs.com/files/case-study-how-roxom-is-pioneering-agentic-compliance" rel="noopener">Roxom case study</a> and <a href="https://www.trmlabs.com/files/case-study-how-hifi-built-compliance-into-stablecoin-infrastructure-from-day-zero" rel="noopener">HIFI case study</a></li>
+          <li><a href="https://www.trmlabs.com/policies/impersonation-scam-warning" rel="noopener">TRM impersonation scam warning</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="foot-h">About this concept</p>
+        <p>The wallet screen, scores, routing and CRM records are illustrative. Fonts: Funnel Sans and Space Mono (OFL). The TRM logo belongs to TRM Labs.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="uth-toggle" id="uth-toggle" aria-expanded="false" aria-controls="uth">Under the hood</button>
+<aside class="uth" id="uth" aria-label="Under the hood: marketing ops view">
+  <header><h2>Under the hood · marketing ops view</h2><p id="uth-mode">What this page would send, score and route. Offline mode: nothing leaves the browser; consented leads wait in the Outbox.</p></header>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="events">Events</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="record">CRM record</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="score">MQL score</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="routing">Routing</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="enrich">Enrichment</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="setup">Tracking setup</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="outbox">Outbox</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="chatqa">Chat QA</button>
+  </div>
+  <div class="panel" id="p-events" role="tabpanel"></div>
+  <div class="panel" id="p-record" role="tabpanel" hidden></div>
+  <div class="panel" id="p-score" role="tabpanel" hidden></div>
+  <div class="panel" id="p-routing" role="tabpanel" hidden></div>
+  <div class="panel" id="p-enrich" role="tabpanel" hidden></div>
+  <div class="panel" id="p-setup" role="tabpanel" hidden></div>
+  <div class="panel" id="p-outbox" role="tabpanel" hidden></div>
+  <div class="panel" id="p-chatqa" role="tabpanel" hidden><p class="muted">Chat QA · the assistant is off in this A/B variant (?chat=on to show it).</p></div>
+</aside>
+
+<script src="definitions.js"></script>
+<script src="widget.js"></script>
+<script src="app.js"></script>
+<script src="kb.js"></script>
+<script src="chatcore.js"></script>
+<script src="chat.js"></script>
+<script src="globe.js" defer></script>
+</body>
+</html>

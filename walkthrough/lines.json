@@ -1,0 +1,17 @@
+[
+  "This is a concept redesign of TRM's crypto business demo page. It has three parts: a live globe, a wallet screen you can try, and the lead flow underneath.",
+  "The globe is interactive. Drag it to spin. Switch between compliance and investigations. Click a screening in the queue, and the globe follows its trace.",
+  "Below it, a short video shows a wallet screen running. Pick a sample wallet, and the screen runs live. It follows funds across chains, scores the risk, and shows the source behind every finding.",
+  "The risk rules are yours to tune. Turn off bridge activity as a signal, and the score updates right away.",
+  "Visitors can ask the assistant. It answers only from TRM's public pages, and every sentence links back to its source.",
+  "If someone was scammed, they get support, not a sales pitch. That reply is fixed. The model never writes it.",
+  "When they want a specialist, the chat asks the same questions as the form, one at a time. Each answer goes into the real form, so scoring and routing follow one set of rules.",
+  "Nothing is sent until the visitor clicks yes. A Head of Compliance with a work email scores sixty. That makes it a qualified lead, routed to the Europe team with a one hour target.",
+  "Under the hood is the marketing ops view. The analytics events carry field names only. Never the email, never the name.",
+  "This is the record that would sync to HubSpot and Salesforce, tied to a campaign.",
+  "The score comes from one definitions file that marketing and sales share.",
+  "Offline, consented leads wait in an outbox. Every row says whether it came from the chat or the form. So we can test which path brings better leads, not just more of them.",
+  "Chat QA shows which sources each answer used, and whether it passed the grounding check.",
+  "Offline mode is the safety net. If we want a full AI chatbot, live mode already sends questions to Claude, and blocks any answer without a source. Next, it could use tools to search live and understand the question, with a tight scope, so it doesn't waste tokens on questions like this one.",
+  "In live mode, the same record goes to a Google Sheet that scores it again on the server and enriches it. One set of rules, from the first question to the CRM."
+]
