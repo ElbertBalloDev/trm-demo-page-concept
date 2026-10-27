@@ -1,5 +1,5 @@
 // One source of truth for this page's funnel: the form, the score, the routing and the CRM record all read this object.
-// Private-sector (crypto business) version of ~/Projects/trm-labs-prep/workflows/definitions.yaml. All values are made up.
+// Private-sector (crypto business) rules. sheet/Code.gs carries a copy for the server-side re-score. All values are made up.
 window.DEFINITIONS = {
   version: 1,
   segment: { name: 'Private · Crypto Business', industry: 'Crypto Business' },

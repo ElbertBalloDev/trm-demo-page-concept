@@ -34,7 +34,7 @@
   function ensure() {
     if (ready) return;
     KB = (root.TRM_KB && root.TRM_KB.KB) || [];
-    DOCS = KB.map((c) => ({ c, t: tokens(c.text + ' ' + c.page_title + ' ' + c.topic + ' ' + c.topic) }));
+    DOCS = KB.map((c) => ({ c, t: tokens(c.text + ' ' + c.page_title + ' ' + c.topic + ' ' + c.topic) }));   // topic counted twice: weights it in BM25
     N = DOCS.length || 1;
     AVG = DOCS.reduce((a, d) => a + d.t.length, 0) / N || 1;
     DF = {};
@@ -188,6 +188,6 @@
     return { intent, redacted: red.text, reply: ans.kind === 'answer' ? ans : FIXED.fallback, retrieved: ans.retrieved, fallbackReason: ans.reason };
   }
 
-  const api = { get KB() { ensure(); return KB; }, tokens, retrieve, pickChunks, offlineAnswer, checkGrounding, parseCited, splitSentences, redactSecrets, isVictim, intentOf, route, FIXED, PRODUCT_TOPICS, MIN_SCORE };
+  const api = { get KB() { ensure(); return KB; }, tokens, retrieve, pickChunks, offlineAnswer, checkGrounding, parseCited, splitSentences, redactSecrets, isVictim, route, FIXED, PRODUCT_TOPICS, MIN_SCORE };
   root.ChatCore = api; if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

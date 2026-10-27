@@ -19,7 +19,7 @@
   else if (!['on', 'off', 'live'].includes(variant)) { variant = 'on'; source = 'default'; }
   const wantLive = variant === 'live';
   if (wantLive) variant = 'on';
-  store.set('concept_chat', variant);
+  if (source !== 'default') store.set('concept_chat', variant);   // only url/ab choices are remembered
   track('ab_variant_assigned', { experiment: 'chat_assistant', variant: variant === 'on' ? 'b_form_plus_chat' : 'a_form_only', source });
   if (variant !== 'on') return;
 
@@ -195,13 +195,14 @@
       d.querySelector('.ho-btns').remove(); userSay('Yes, contact me');
       FF.consent.checked = true; FF.consent.dispatchEvent(new Event('change'));
       const form = $('#lead'); form.dataset.source = 'chat';
+      window.__lastLead = null;   // only this submit counts
       form.requestSubmit();
       form.dataset.source = '';
       const s = window.__lastLead;
       endCapture(s ? 'submitted' : 'invalid');
       if (!s) { say('Something is missing in the form. Please check it below.'); $('#demo').scrollIntoView({ block: 'start' }); return; }
       const where = s.saved === 'sheet' ? 'Saved to the concept Google Sheet.' : 'Offline: saved in this browser’s outbox (Under the hood → Outbox).';
-      if (s.sc.status === 'mql') say(`Thanks, ${FF.first.value.trim()}. You’re with the ${s.routing.team}.`, `A specialist for ${s.routing.region} will reach out, target within ${s.routing.sla} minutes in business hours.`, where);
+      if (s.sc.status === 'mql') say(`Thanks, ${FF.first.value.trim()}. You’re with the ${s.routing.team.replace(/ \(round-robin\)$/, '')}.`, `A specialist for ${s.routing.region} will reach out, target within ${s.routing.sla} minutes in business hours.`, where);
       else say(`Thanks, ${FF.first.value.trim()}. We’ll send a short guide first, then a specialist follows up.`, where);
     });
   }

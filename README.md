@@ -22,7 +22,7 @@ The page runs offline in the browser. Nothing is sent anywhere unless live mode 
 
 ## What's on the page (v3)
 
-- **Hero globe** (`globe.js`): Elbert's own globe from `~/Projects/trm-globe-demo` (three.js, NASA Blue Marble / Black Marble textures and Natural Earth borders, embedded in `vendor/`). It shows:
+- **Hero globe** (`globe.js`): Elbert's own globe from an earlier project (three.js, NASA Blue Marble / Black Marble textures and Natural Earth borders, embedded in `vendor/`). It shows:
   - A dense, regionally balanced network: ~280 points and ~120 faint arcs, no arc under ~800 km, travelling pulses.
   - Up to 4 made-up screenings at once, each with its own lifecycle. They spawn where the globe is facing.
   - A **Compliance (prevent) | Investigations (trace)** toggle, also settable with `?mode=compliance|investigate`.
@@ -56,7 +56,7 @@ Double-click `index.html`. It needs no server or build step, and it works offlin
 Useful URLs:
 - `index.html?v=a` or `?v=b`: force the hero headline variant (A/B test, like TRM's own `/lp/epco-framework-a` and `-b`).
 - `index.html?utm_source=linkedin&utm_medium=paid_social&utm_campaign=crypto-compliance-q4`: the hidden UTM fields fill from the URL.
-- Press **⚙ Under the hood** (bottom right) to see events, the CRM record, the MQL score, routing, enrichment and the tracking setup.
+- Press **Under the hood** (bottom left) to see events, the CRM record, the MQL score, routing, enrichment and the tracking setup.
 
 ## Demo mode and live mode
 
@@ -105,7 +105,7 @@ Useful URLs:
 
 - `index.html`: the page.
 - `style.css`: the TRM-language skin.
-- `definitions.js`: the single source of truth for exclusions, scoring, routing and CRM values. The form, score, routing and record all read it, mirroring `../workflows/definitions.yaml`.
+- `definitions.js`: the single source of truth for exclusions, scoring, routing and CRM values. The form, score, routing and record all read it, and `sheet/Code.gs` carries the same rules for the server-side re-score.
 - `app.js`: the form, dataLayer events, under-the-hood panel, wallet picker, walkthrough preview and live-mode hook.
 - `kb.js`, `chatcore.js`, `chat.js`: the concept assistant (knowledge base, guards + retrieval + grounding check, UI). `sheet/KB.gs` and `sheet/ChatCore.gs` are copies for the Apps Script.
 - `widget.js`: the investigation panel. `globe.js`: the hero globe.
@@ -113,7 +113,6 @@ Useful URLs:
 - `assets/`:
   - Fonts: Funnel Sans and Space Mono (OFL).
   - The TRM Labs logo SVG and the customer logos.
-  - The collage skin's fonts and photos moved to `_archive/assets/`; their sources are listed in `../ardence-collage/CREDITS.md`.
 - `screenshots/`: headless test captures (desktop and 390 px mobile).
 
 ## Logos
@@ -128,7 +127,7 @@ The seven customer logos are the SVG files that TRM's own `/crypto-business/demo
 - Anchorage Digital: https://cdn.prod.website-files.com/6082dc5b67056233213587a4/6740cf044a6316daddc67fd0_anchorage%20digital%20logo.svg
 - Ava Labs: https://cdn.prod.website-files.com/6082dc5b67056233213587a4/6740cf06bfe53d70c6bf8f09_avalabs%20logo.svg
 
-**Third-party logos are trademarks of their owners.** This page is an interview concept. Keep it private and unlisted (it is `noindex`), and do not publish it publicly.
+**Third-party logos are trademarks of their owners** and are shown as they appear on TRM's own page. This is an unofficial interview concept, not affiliated with TRM Labs, and it is `noindex`.
 
 ## Privacy
 

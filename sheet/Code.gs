@@ -79,15 +79,16 @@ function setup() {
 
 /** The landing page posts here (text/plain JSON, no-cors). */
 function doPost(e) {
+  let d;
+  try { d = JSON.parse((e && e.postData && e.postData.contents) || '{}'); } catch (err) { return json_({ ok: false, error: 'bad_json' }); }
+  if (d.type === 'chat') return chatPost_(d);   // chat never writes Leads, so it does not wait for the lock
   const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
   try {
-    const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
-    if (d.type === 'chat') return chatPost_(d);
+    if (!lock.tryLock(10000)) return json_({ ok: false, error: 'busy' });
     if (!rateOk_()) { log_('warn', 'rate_limit', '', 'too many posts this minute'); return json_({ ok: false, error: 'rate_limited' }); }
     const email = String(d.email || '').trim().toLowerCase();
     const dom = email.split('@')[1] || '';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { log_('warn', 'reject', dom, 'invalid email'); return json_({ ok: false, error: 'invalid_email' }); }
+    if (!/^[^\s@=+\-][^\s@]*@[^\s@]+\.[^\s@]+$/.test(email)) { log_('warn', 'reject', dom, 'invalid email'); return json_({ ok: false, error: 'invalid_email' }); }
 
     // Server-side exclusions: the page already filters these, but the server checks again.
     if (d.consent !== true) { log_('warn', 'reject', dom, 'no consent'); return json_({ ok: false, error: 'no_consent' }); }
@@ -100,7 +101,8 @@ function doPost(e) {
     const leads = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Leads');
     const dupRow = findRow_(leads, email);
 
-    const u = (k) => String(d[k] || '');
+    // a public endpoint: text starting with = + - @ would run as a Sheet formula, so prefix it with '
+    const u = (k) => { const v = String(d[k] || ''); return /^[=+\-@]/.test(v) ? "'" + v : v; };
     const row = {
       received_at: new Date(), email: email, firstname: u('firstname'), lastname: u('lastname'), company: u('company'),
       jobtitle: u('jobtitle'), need: u('need'), message: u('message').slice(0, 1000),

@@ -47,6 +47,8 @@ Made-up demo for an interview concept. Use only your own email and test entries.
 | A gmail address | Status `lead`, reason "free email", enrichment "skipped: free email" |
 | Need = victim, or a message with "scammed" | No Leads row. Log says `victim_support` (the page doesn't even send it) |
 
+| Chat question | Expected |
+|---|---|
 | Chat: "Which chains do you cover?" (live) | Log `chat_answer`, grounded |
 | Chat: "I was scammed, can you help?" | Log `victim_support`; the model is not called; no sales handoff |
 | Chat: a pasted seed phrase or private key | Redacted on the page before sending; Log `chat_secret_redacted` if it reaches the server; the model is not called |
