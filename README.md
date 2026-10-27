@@ -1,5 +1,7 @@
 # Crypto compliance demo page: concept redesign
 
+[![Watch the 3-minute walkthrough](docs/walkthrough-thumb.jpg)](https://elbertballodev.github.io/trm-demo-page-concept/walkthrough/walkthrough.mp4)
+
 A concept redesign of TRM Labs' `/crypto-business/demo` page by Elbert Ballo. **Not a TRM page.** The page says so at the top and the bottom, and it is marked `noindex,nofollow`. All wallets, scores and leads are made up.
 
 - **Live page:** https://elbertballodev.github.io/trm-demo-page-concept/
